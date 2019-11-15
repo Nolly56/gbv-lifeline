@@ -11,7 +11,7 @@
     >
 &nbsp;
     </div>
-     <Capture />
+    <Capture />
     <Legend
       @mapTypeChanged="changeMapType"
       :selected-map-type="selectedMapType"
