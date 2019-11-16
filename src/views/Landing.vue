@@ -15,7 +15,7 @@ import L from "leaflet/dist/leaflet";
 import Capture from "@/components/Capture";
 import IconInfo from "@/components/IconInfo";
 import Legend from "@/components/Legend";
-import Search from "@/components/Search";
+import Search from "@/components/SearchComponents/Search";
 const uuidv1 = require("uuid/v1");
 const pinUrl = require("@/assets/pins/pin.png");
 export default {
@@ -40,9 +40,7 @@ export default {
   props: {
     latlong: {
       type: Object,
-      default() {
-        return;
-      }
+      default() {}
     }
   },
   computed: {},
@@ -63,7 +61,6 @@ export default {
     },
     setMarker(latlong) {
       this.clearMarkers();
-      console.log(latlong);
       const markerIcon = new L.Icon({
         iconUrl: pinUrl,
         iconSize: [40, 40],
@@ -89,6 +86,15 @@ export default {
         this.leafletMap.removeLayer(this.marker);
       }
       this.marker = null;
+    },
+    iniRouting() {
+      L.Routing.control({
+        waypoints: [
+          L.latLng(-25.749389, 28.238429),
+          L.latLng(-25.5733535, 28.1001138)
+        ],
+        routeWhileDragging: true
+      }).addTo(this.leafletMap);
     }
   },
   mounted() {
@@ -100,6 +106,6 @@ export default {
 <style scoped>
 .fullsize {
   width: 100%;
-  height: 90%;
+  height: 86%;
 }
 </style>

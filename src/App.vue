@@ -29,7 +29,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col text-left hidden-xs">
-            <a class="text-white">Version: {{appVersion}}</a>
+            <a class="text-white">Version: {{ appVersion }}</a>
             &nbsp;|&nbsp;
             <a class="text-white">Life Line {{ year }}</a>
           </div>

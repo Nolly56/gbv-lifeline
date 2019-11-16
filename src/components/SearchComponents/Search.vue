@@ -19,42 +19,42 @@
 
 <script>
 export default {
-  name: "Search",
+  name: 'Search',
   props: {},
   components: {},
-  data() {
+  data () {
     return {
       place: null
-    };
+    }
   },
-  mounted() {},
+  mounted () {},
   methods: {
-    setPlace(place) {
+    setPlace (place) {
       if (place) {
-        this.place = place;
+        this.place = place
         let latlong = {
           latitude: this.place.geometry.location.lat(),
           longitude: this.place.geometry.location.lng()
-        };
-        this.$emit("positionLatLong", latlong);
+        }
+        this.$emit('positionLatLong', latlong)
       }
     },
-    usePlace(place) {
+    usePlace (place) {
       if (place) {
-        this.place = place;
+        this.place = place
         let latlong = {
           latitude: this.place.geometry.location.lat(),
           longitude: this.place.geometry.location.lng()
-        };
-        this.$emit("positionLatLong", latlong);
-        this.place = null;
+        }
+        this.$emit('positionLatLong', latlong)
+        this.place = null
       }
     }
   },
   created: {
   },
   watch: {}
-};
+}
 </script>
 <style scoped>
 .search {
