@@ -1,58 +1,53 @@
 <template>
   <div class="fullsize">
-    <search
-      class="d-sm-12"
-      @selectionChanged="searchSelectionChanged"
-    />
-    <div
-      :id="mapId"
-      class="fullsize"
-      style="position: absolute"
-    >
-&nbsp;
-    </div>
+    <search class="d-sm-12" @positionLatLong="positionLatLong" />
+    <div :id="mapId" class="fullsize" style="position: absolute">&nbsp;</div>
     <Capture />
-    <Legend
-      @mapTypeChanged="changeMapType"
-      :selected-map-type="selectedMapType"
-    />
+    <Legend @mapTypeChanged="changeMapType" :selected-map-type="selectedMapType" />
 
     <IconInfo />
   </div>
 </template>
 
 <script>
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet/dist/leaflet'
-import Capture from '@/components/Capture'
-import IconInfo from '@/components/IconInfo'
-import Legend from '@/components/Legend'
-import Search from '@/components/Search'
-const uuidv1 = require('uuid/v1')
-const pinUrl = require('@/assets/pins/pin.png')
+import "leaflet/dist/leaflet.css";
+import L from "leaflet/dist/leaflet";
+import Capture from "@/components/Capture";
+import IconInfo from "@/components/IconInfo";
+import Legend from "@/components/Legend";
+import Search from "@/components/Search";
+const uuidv1 = require("uuid/v1");
+const pinUrl = require("@/assets/pins/pin.png");
 export default {
-  name: 'Landing',
+  name: "Landing",
   components: {
     Capture,
     IconInfo,
     Legend,
     Search
   },
-  data () {
+  data() {
     return {
       mapId: `mapId${uuidv1()}`,
-      defaultMapType: 'hybrid',
+      defaultMapType: "hybrid",
       selectedMapType: this.defaultMapType,
       center: [this.latitude, this.longitude],
       leafletMap: null,
       latitude: -28,
       longitude: 25
+    };
+  },
+  props: {
+    latlong: {
+      type: Object,
+      default() {
+        return;
+      }
     }
   },
-  props: {},
   computed: {},
   methods: {
-    initMap () {
+    initMap() {
       this.leafletMap = window.AfriGIS.map(this.mapId, {
         maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)),
         center: L.latLng(this.latitude, this.longitude),
@@ -64,42 +59,42 @@ export default {
         zoom: 5,
         zoomControl: false,
         crs: L.CRS.EPSG4326
-      })
+      });
     },
-    setMarker (latlong) {
-      this.clearMarkers()
-
+    setMarker(latlong) {
+      this.clearMarkers();
+      console.log(latlong);
       const markerIcon = new L.Icon({
         iconUrl: pinUrl,
         iconSize: [40, 40],
         iconAnchor: [20, 40]
-      })
-      const coordArray = [latlong.latitude, latlong.longitude]
+      });
+      const coordArray = [latlong.latitude, latlong.longitude];
       this.marker = L.marker(coordArray, {
         icon: markerIcon
-      })
-      this.leafletMap.fitBounds([coordArray])
+      });
+      this.leafletMap.fitBounds([coordArray]);
 
-      this.marker.addTo(this.leafletMap)
+      this.marker.addTo(this.leafletMap);
     },
-    changeMapType (mapType) {
-      this.selectedMapType = mapType
-      this.leafletMap.switchTo(mapType)
+    changeMapType(mapType) {
+      this.selectedMapType = mapType;
+      this.leafletMap.switchTo(mapType);
     },
-    searchSelectionChanged (latlong) {
-      this.setMarker(latlong)
+    positionLatLong(latlong) {
+      this.setMarker(latlong);
     },
-    clearMarkers () {
+    clearMarkers() {
       if (this.marker != null) {
-        this.leafletMap.removeLayer(this.marker)
+        this.leafletMap.removeLayer(this.marker);
       }
-      this.marker = null
+      this.marker = null;
     }
   },
-  mounted () {
-    this.initMap()
+  mounted() {
+    this.initMap();
   }
-}
+};
 </script>
 
 <style scoped>
