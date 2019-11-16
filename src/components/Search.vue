@@ -29,9 +29,6 @@ export default {
   },
   mounted() {},
   methods: {
-    setDescription(description) {
-      this.description = description;
-    },
     setPlace(place) {
       if (place) {
         this.place = place;
@@ -55,7 +52,6 @@ export default {
     }
   },
   created: {
-    searchQuery() {}
   },
   watch: {}
 };

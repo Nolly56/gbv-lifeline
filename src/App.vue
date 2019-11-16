@@ -28,10 +28,12 @@
     <footer class="footer fixed-bottom navbar-dark dark-footer">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-5 text-left hidden-xs">
+          <div class="col text-left hidden-xs">
+            <a class="text-white">Version: {{appVersion}}</a>
+            &nbsp;|&nbsp;
             <a class="text-white">Life Line {{ year }}</a>
           </div>
-          <div class="col-7 text-right hidden-xs">
+          <div class="col-5 text-right hidden-xs">
             <a class="text-white">Contact : 911</a>
           </div>
         </div>
@@ -49,7 +51,8 @@ export default {
   },
   data () {
     return {
-      year: new Date().getFullYear()
+      year: new Date().getFullYear(),
+      appVersion: process.env.VUE_APP_VERSION
     }
   }
 }

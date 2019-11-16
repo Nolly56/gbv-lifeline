@@ -16,7 +16,8 @@
     "vue-localstorage": "^0.6.2",
     "vue-resource": "1.5.1",
     "vue-router": "3.0.3",
-    "vue2-google-maps": "0.10.7"
+    "vue2-google-maps": "0.10.7",
+    "leaflet.markercluster": "1.4.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.0.0",
