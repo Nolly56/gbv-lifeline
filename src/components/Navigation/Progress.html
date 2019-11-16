@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Internet GIS Final Project</title>
+
+    <!--Scripts-->
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+    <script src="https://raw.githubusercontent.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js"></script>
+    <!--turf.js-->
+    <!-- <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script> -->
+    <!--chloropleth plugin directory-->
+    <script src="/leaflet/choropleth.js"></script>
+    <!--google maps cdn-->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADa6LjReUHzt5LTTqHC_SZ4QmWlpgYf3s&callback=initMap">
+    </script>
+    <!--require script-->
+    <!-- <script src=" https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
+
+    <!--Data scripts-->
+    <script type="text/javascript" src="../../gbv-lifeline/src/assets/jsonLayers/Shops.js"></script>
+    <!--Police stations data-->
+    <script type="text/javascript" src="../../gbv-lifeline/src/assets/jsonLayers/polPoints.js"></script>
+    <!--Pools data-->
+    <script type="text/javascript" src="../../gbv-lifeline/src/assets/jsonLayers/Pools.js"></script>
+    <!--Rec Hubs data-->
+    <script type="text/javascript" src="../../gbv-lifeline/src/assets/jsonLayers/RecHubs.js"></script>
+    <!--sport grounds data-->
+    <script type="text/javascript" src="../../gbv-lifeline/src/assets/jsonLayers/sportsGrounds.js"></script>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <!--toggle style-->
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 90%;
+
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<!--Map style-->
+<style>
+    #mapid {
+
+        height: 600px
+    }
+</style>
+
+<body>
+
+    <body>
+
+        <div>
+            <h2>Layers</h2>
+
+            <label class="switch">
+                <input onclick="toggleShop()" type="checkbox">
+                <span class="slider"></span>
+            </label>
+
+            <label class="switch">
+                <input onclick="togglePolice()" type="checkbox">
+                <span class="slider"></span>
+            </label>
+
+            <label class="switch">
+                <input onclick="togglePools()" type="checkbox">
+                <span class="slider"></span>
+            </label>
+
+            <label class="switch">
+                <input onclick="toggleRecHubs()" type="checkbox">
+                <span class="slider"></span>
+            </label>
+
+            <label class="switch">
+                <input onclick="toggleSportsGrounds()" type="checkbox">
+                <span class="slider"></span>
+            </label>
+
+        </div>
+        <div id="mapid"></div>
+
+        <script>
+            //variables
+            let mymap = L.map('mapid').setView([-34, 19], 9);
+            let toggleShopsLayer = false;
+            let togglePoliceLayer = false;
+            let togglePoolsLayer = false;
+            let toggleRecHubsLayer = false;
+            let toggleSportsGroundsLayer = false;
+
+            //styling icons
+            let shopIcon = L.icon({
+                iconUrl: '../../gbv-lifeline/src/assets/images/shopping-center.png',
+                iconSize: [74, 64],
+                iconAnchor: [34, 64]
+            });
+
+            let shop = L.geoJSON(shops, {
+                pointToLayer: function (geoJsonPoint, latlng) {
+                    return L.marker(latlng, {
+                        icon: shopIcon
+                    }); //add popups when clicking on shop icon
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup('This is a shopping centre')
+                }
+            });
+
+            //styling police stations
+            let polIcon = L.icon({
+                iconUrl: '../../gbv-lifeline/src/assets/images/police-station.png',
+                iconSize: [64, 54],
+                iconAnchor: [34, 54]
+            });
+            let Stations = L.geoJSON(policePoints, {
+                pointToLayer: function (geoJsonPoint, latlng) {
+                    return L.marker(latlng, {
+                        icon: polIcon
+                    });//add popups when clicking on shop icon
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup('This is a Police Station')
+                }
+            });
+
+            //styling pools
+            let swim = L.icon({
+                iconUrl: '../../gbv-lifeline/src/assets/images/beach-ball.png',
+                iconSize: [54, 54],
+                iconAnchor: [34, 54]
+            });
+
+            let pools = L.geoJSON(swimmingPools, {
+                pointToLayer: function (geoJsonPoint, latlng) {
+                    return L.marker(latlng, {
+                        icon: swim
+                    });//add popups when clicking on pool icon
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.NAME + " community swimming pool")
+                }
+
+            }); //.addTo(mymap);
+
+            //Style recreational hubs
+            let recIcon = L.icon({
+                iconUrl: '../../gbv-lifeline/src/assets/images/market.png',
+                iconSize: [54, 64],
+                iconAnchor: [34, 64]
+            });
+
+            let recreationHubs = L.geoJSON(recHubs, {
+                pointToLayer: function (geoJsonPoint, latlng) {
+                    return L.marker(latlng, {
+                        icon: recIcon
+                    });//add popups when clicking on pool icon
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.NAME)
+                }
+
+            });//.addTo(mymap);
+
+            //style sports grounds
+
+            // Base map layers
+            let streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
+
+            // stamen toner OSM layer
+            let stamen = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png').addTo(mymap);
+
+            //CartoDB layer
+            let CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(mymap);
+
+            //Thunderforest layer
+            let Hydda_Full = L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png').addTo(mymap);
+
+            //MCartoDB layer2
+            let CartoDB_Positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(mymap);
+
+            // create a satellite imagery layer
+            let satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+
+            // create an object to hold layer names as you want them to appear in the basemap switcher list
+            let basemapControl = {
+                "OSM Streets": streets,
+                " ESRI Satellite": satellite,
+                "Hydda Layer": Hydda_Full,
+                "Stamen toner": stamen,
+                "DarkMatter": CartoDB_DarkMatter,
+                "Positron": CartoDB_Positron,
+            }
+
+            // display the control (switcher list) on the map, by default in the top right corner
+            L.control.layers(basemapControl).addTo(mymap);
+            
+            //Toggle shops function
+            function toggleShop() {
+                console.log('I am inside')
+
+                toggleShopsLayer = !toggleShopsLayer;
+                if (toggleShopsLayer) {
+                    console.log('I am inside my if statement')
+                    shop.addTo(mymap);
+                } else {
+                    console.log('I am inside my else statement')
+                    mymap.removeLayer(shop);
+                }
+            };
+
+            //Toggle police stations function
+            function togglePolice() {
+                togglePoliceLayer = !togglePoliceLayer;
+                if (togglePoliceLayer) {
+                    console.log('I am inside my if statement')
+                    Stations.addTo(mymap);
+                } else {
+                    console.log('I am inside my else statement')
+                    mymap.removeLayer(Stations);
+                }
+            };
+
+           // L.geoJSON(PolPoints).addTo(mymap);
+
+
+            //Toggle swimming pools
+            function togglePools() {
+                togglePoolsLayer = !togglePoolsLayer;
+                if (togglePoolsLayer) {
+                    console.log('I am inside my if statement')
+                    pools.addTo(mymap);
+                } else {
+                    console.log('I am inside my else statement')
+                    mymap.removeLayer(pools);
+                }
+            };
+
+            //Toggle recreational hubs
+            function toggleRecHubs() {
+                toggleRecHubsLayer = !toggleRecHubsLayer;
+                if (toggleRecHubsLayer) {
+                    console.log('I am inside my if statement')
+                    recreationHubs.addTo(mymap);
+                } else {
+                    console.log('I am inside my else statement')
+                    mymap.removeLayer(recreationHubs)
+                }
+            };
+
+
+
+        </script>
+
+    </body>
+
+</html>

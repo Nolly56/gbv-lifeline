@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import Landing from '@/views/Landing'
+import Landing from 'D:/INTERNET GIS FINAL PROJECT/gbv-lifeline/src/components/Nav'
 export default {
   name: 'App',
   components: {
