@@ -3,29 +3,42 @@
     <button
       class="btn button btn-primary float-right mt-3 mr-3"
       @click="displaySelector=!displaySelector"
+      title="Legend"
     >
       <span :class="baseMapToggleClass" />
     </button>
     <div v-show="displaySelector">
       <div class="row float-right d-flex flex-column m-0 mt-3 mr-3">
-        <button
-          :class="menuOption('vector')"
-          @click="select('vector')"
-        >
-          Vector
-        </button>
-        <button
-          :class="menuOption('hybrid')"
-          @click="select('hybrid')"
-        >
-          Hybrid
-        </button>
-        <button
-          :class="menuOption('imagery')"
-          @click="select('imagery')"
-        >
-          Image
-        </button>
+        <div class="dropdown-legend">
+          <div>
+            <p>BASE MAPS</p>
+            <button
+              :class="menuOption('vector')"
+              style="width:30px"
+              @click="select('vector')"
+            >Vector</button>
+            <button :class="menuOption('hybrid')" @click="select('hybrid')">Hybrid</button>
+            <button :class="menuOption('imagery')" @click="select('imagery')">Image</button>
+          </div>
+          <div>
+            <hr />
+            <p>MAP POI</p>
+            <label @click="policePOI()" class="w-100">
+              Police Station
+              <span style="display:inline-block; width: 40px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
+            </label>
+          </div>
+          <div>
+            <hr />
+            <p>CRIME INCIDENTS</p>
+            <label @click="crimeSexual()" class="w-100">
+              Sexual Assault
+              <span style="display:inline-block; width: 40px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -34,44 +47,56 @@
 <script>
 export default {
   computed: {
-    baseMapToggleClass () {
-      let baseMapClasses = 'fa '
-      baseMapClasses += (this.displaySelector) ? 'fa-bars fa-rotate-90 ' : 'fa-bars'
-      return baseMapClasses
+    baseMapToggleClass() {
+      let baseMapClasses = "fa ";
+      baseMapClasses += this.displaySelector
+        ? "fa-bars fa-rotate-90 "
+        : "fa-bars";
+      return baseMapClasses;
     }
   },
-  data () {
+  data() {
     return {
-      displaySelector: false
-    }
+      displaySelector: false,
+      police: false,
+      sexualC: false
+    };
   },
   methods: {
-    menuOption (mapType) {
+    menuOption(mapType) {
       return [
-        'btn',
-        'w-100',
-        mapType === this.selectedMapType ? 'btn-primary' : 'bg-white'
-      ]
+        "btn",
+        "w-100",
+        mapType === this.selectedMapType ? "btn-primary" : "bg-white"
+      ];
     },
-    select (mapType) {
-      this.$emit('mapTypeChanged', mapType)
-      this.displaySelector = !this.displaySelector
+    select(mapType) {
+      this.$emit("mapTypeChanged", mapType);
+      this.displaySelector = !this.displaySelector;
+    },
+    policePOI() {
+      this.police = !this.police;
+      this.$emit("togglePolice", this.police);
+    },
+    crimeSexual() {
+      this.sexualC = !this.sexualC;
+      this.$emit("toggleSexualCrime", this.sexualC);
     }
   },
-  name: 'BaseDisplay',
+  name: "BaseDisplay",
   props: {
     selectedMapType: {
       required: true,
       type: String,
-      default: 'hybrid'
+      default: "hybrid"
     }
   },
   watch: {
-    selectedMapType (val) {
-      this.selectedType = val
+    selectedMapType(val) {
+      this.selectedType = val;
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -83,5 +108,10 @@ export default {
 .button {
   width: 45px;
   height: 45px;
+}
+.dropdown-legend {
+  width: 250px;
+  height: 380px;
+  background-color: #f8f9fa;
 }
 </style>

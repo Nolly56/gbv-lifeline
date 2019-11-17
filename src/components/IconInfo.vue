@@ -2,7 +2,7 @@
   <div class="legend fixed-bottom pl-5 pb-5 col-11 col-sm-3 row ">
     <div class="col-12 col-sm-2 mw-90">
       <img
-        src="../assets/24-line.png"
+        src="@/assets/images/24-line.png"
         alt="24 Hour Logo"
         class="logo"
       >

@@ -1,32 +1,37 @@
 <template>
-  <div
-    class="modal fade"
-    id="capture-modal"
-    role="dialog"
-  >
-    <div
-      class="modal-dialog"
-      role="document"
-    >
+  <div class="modal fade" id="capture-modal" role="dialog">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5
-            class="modal-title"
-            id="exampleModalLabel"
-          >
-            Emergency Call
-          </h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          class="close"
+          id="close-e-form"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
         <div class="modal-body">
-          <FormBody />
+          <form-wizard
+            @on-complete="onComplete"
+            title="Emergency"
+            subtitle="Call Centre"
+            shape="circle"
+            :start-index="startId"
+            back-button-text="Back"
+            next-button-text="Next"
+            finish-button-text="Submit"
+            color="#3498db"
+            ref="reset"
+            stepSize="sm"
+          >
+            <tab-content title="Details" icon="ti-user">
+              <DetailsFormBody />
+            </tab-content>
+            <tab-content title="Submit" icon="ti-check">
+              <LocationFormBody />
+            </tab-content>
+          </form-wizard>
         </div>
       </div>
     </div>
@@ -34,23 +39,31 @@
 </template>
 
 <script>
-import FormBody from '@/components/Forms/FormBody'
+import DetailsFormBody from "@/components/Forms/DetailsFormBody";
+import LocationFormBody from "@/components/Forms/LocationFormBody";
+
 export default {
-  name: 'UserDetails',
+  name: "UserDetails",
   components: {
-    FormBody
+    DetailsFormBody,
+    LocationFormBody
   },
-  data () {
+  data() {
     return {
+      resetForm: true,
+      startId: 0
+    };
+  },
+  methods: {
+    onComplete() {
+      this.$refs.reset.reset();
+      document.getElementById("close-e-form").click();
     }
   }
-}
+};
 </script>
 <style scoped>
-.modal-backdrop{
-  z-index: 1500;
-}
-.modal-dialog{
-  z-index: 15001;
+.modal{
+  overflow-y: hidden;
 }
 </style>

@@ -11,61 +11,63 @@
         <i class="fas fa-plus fa-1x" />
       </button>
     </div>
-    <UserDetails v-on:navigateForm="navigateForms" />
+    <UserDetails @navigateForm="navigateForms" />
   </div>
 </template>
 
 <script>
-import UserDetails from "@/components/Forms/UserDetails";
+import UserDetails from '@/components/Forms/UserDetails'
 export default {
   components: {
     UserDetails
   },
-  data() {
-    return {};
+  data () {
+    return {
+      currentTab: 0
+    }
   },
   methods: {
-    navigateForms(data) {
-      let index = data.index;
-      let vaildform = data.vaild;
-      let activeTab = document.getElementsByClassName("tab");
+    navigateForms (data) {
+      let index = data.index
+      let vaildform = data.vaild
+      let activeTab = document.getElementsByClassName('tab')
 
-      if (!vaildform && index == 1) {
-        return;
+      if (!vaildform && index === 1) {
+        return
       }
-      this.transferFormData(data);
+      this.transferFormData(data)
 
-      activeTab[this.currentTab].style.display = "none";
+      activeTab[this.currentTab].style.display = 'none'
 
-      this.currentTab = this.currentTab + index;
-      if (this.currentTab == activeTab.length - 1) {
+      this.currentTab = this.currentTab + index
+      if (this.currentTab === activeTab.length - 1) {
         this.populateForm(
           this.clientForm,
           this.locationForm,
           this.responderFrom
-        );
+        )
       }
-      this.showTab(this.currentTab);
+      this.showTab(this.currentTab)
     },
-    transferFormData(data) {
+    transferFormData (data) {
       switch (data.form) {
-        case "client":
+        case 'client':
           if (data.vaild) {
-            this.clientForm = data.details;
+            this.clientForm = data.details
           }
-          break;
-        case "location":
+          break
+        case 'location':
           if (data.vaild) {
-            this.locationForm = data.details;
+            this.locationForm = data.details
           }
-          break;
+          break
       }
     }
   },
-  name: "Capture",
+  name: 'Capture',
   props: {},
   watch: {}
-};
+}
 </script>
 
 <style scoped>
