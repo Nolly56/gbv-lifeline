@@ -2,10 +2,10 @@
   <div class="form-group">
     <div class="form-row">
       <div class="form-group col-md-6">
-        <input type="text" class="form-control" id="input-name" placeholder="Name" />
+        <input class="form-control" id="input-name" placeholder="Name" />
       </div>
       <div class="form-group col-md-6">
-        <input type="text" class="form-control" id="input-contact" placeholder="Contact" />
+        <input class="form-control" id="input-contact" placeholder="Contact" />
       </div>
     </div>
     <div class="form-group">

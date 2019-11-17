@@ -1,4 +1,4 @@
-let SexualCrimePoints = {
+{
 "type": "FeatureCollection",
 "name": "sexual crime",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4148" } },
@@ -443,4 +443,4 @@ let SexualCrimePoints = {
 { "type": "Feature", "properties": { "OBJECTID": 65405, "Incident": 5719, "X_Coord": 18.67862808, "Y_Coord": -34.03338867, "Offence": "Sexual Assault", "Year": 2016, "Month": 2, "Day": 13, "Weekday": 7, "SatSun": 1, "Hour": 12, "Minute": 0 }, "geometry": { "type": "Point", "coordinates": [ 18.67863, -34.03339 ] } },
 { "type": "Feature", "properties": { "OBJECTID": 65406, "Incident": 5857, "X_Coord": 18.65370822, "Y_Coord": -34.02579354, "Offence": "Sexual Assault", "Year": 2016, "Month": 2, "Day": 29, "Weekday": 2, "SatSun": 0, "Hour": 18, "Minute": 30 }, "geometry": { "type": "Point", "coordinates": [ 18.65371, -34.02579 ] } }
 ]
-};
+}

@@ -1,4 +1,4 @@
-let rapePoints = {
+{
 "type": "FeatureCollection",
 "name": "Rape",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4148" } },
@@ -3954,4 +3954,4 @@ let rapePoints = {
 { "type": "Feature", "properties": { "OBJECTID": 60989, "Incident": 6088, "X_Coord": 18.65925325, "Y_Coord": -34.01737925, "Offence": "Rape", "Year": 2016, "Month": 3, "Day": 26, "Weekday": 7, "SatSun": 1, "Hour": 0, "Minute": 0 }, "geometry": { "type": "Point", "coordinates": [ 18.65925, -34.01738 ] } },
 { "type": "Feature", "properties": { "OBJECTID": 60990, "Incident": 6115, "X_Coord": 18.64078467, "Y_Coord": -34.01358197, "Offence": "Rape", "Year": 2016, "Month": 3, "Day": 28, "Weekday": 2, "SatSun": 0, "Hour": 0, "Minute": 15 }, "geometry": { "type": "Point", "coordinates": [ 18.64078, -34.01358 ] } }
 ]
-};
+}

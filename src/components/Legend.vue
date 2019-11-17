@@ -11,9 +11,7 @@
       <div class="row float-right d-flex flex-column m-0 mt-3 mr-3">
         <div class="dropdown-legend">
           <div>
-             <p>
-            BASE MAPS
-             </p>
+            <p>BASE MAPS</p>
             <button
               :class="menuOption('vector')"
               style="width:30px"
@@ -23,34 +21,21 @@
             <button :class="menuOption('imagery')" @click="select('imagery')">Image</button>
           </div>
           <div>
-           <hr>
-            <p>
-              MAP POI
-            </p>
+            <hr />
+            <p>MAP POI</p>
             <label @click="policePOI()" class="w-100">
-              Police Station<span style="display:inline-block; width: 40px;"></span>
-              <input
-
-                type="checkbox"
-                data-toggle="toggle"
-                data-size="sm"
-              />
+              Police Station
+              <span style="display:inline-block; width: 40px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
             </label>
-                <label class="w-100">
-              Police Station<span style="display:inline-block; width: 40px;"></span>
-              <input
-                type="checkbox"
-                data-toggle="toggle"
-                data-size="sm"
-              />
-            </label>
-                <label class="w-100">
-              Police Station<span style="display:inline-block; width: 40px;"></span>
-              <input
-                type="checkbox"
-                data-toggle="toggle"
-                data-size="sm"
-              />
+          </div>
+          <div>
+            <hr />
+            <p>CRIME INCIDENTS</p>
+            <label @click="crimeSexual()" class="w-100">
+              Sexual Assault
+              <span style="display:inline-block; width: 40px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
             </label>
           </div>
         </div>
@@ -73,7 +58,8 @@ export default {
   data() {
     return {
       displaySelector: false,
-      police:false
+      police: false,
+      sexualC: false
     };
   },
   methods: {
@@ -91,6 +77,10 @@ export default {
     policePOI() {
       this.police = !this.police;
       this.$emit("togglePolice", this.police);
+    },
+    crimeSexual() {
+      this.sexualC = !this.sexualC;
+      this.$emit("toggleSexualCrime", this.sexualC);
     }
   },
   name: "BaseDisplay",
