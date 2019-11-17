@@ -5,7 +5,7 @@
       style="background-color: #005495;"
     >
       <img
-        src="./assets/LifeLine.png"
+        src="@/assets/images/LifeLine.png"
         alt="Life Line Logo"
         style="width:45px;margin-left:30px;"
       >

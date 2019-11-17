@@ -1,14 +1,22 @@
 <template>
   <div class="fullsize">
-    <!-- <search class="d-sm-12" @positionLatLong="positionLatLong" /> -->
+    <search class="d-sm-12" @positionLatLong="positionLatLong" />
     <div :id="mapId" class="fullsize" style="position: absolute">&nbsp;</div>
     <div class="baseDisplay">
-      <button  class="btn button btn-primary float-right mt-3 mr-3" title="Reset Map" @click="ResetMap">
+      <button
+        class="btn button btn-primary float-right mt-3 mr-3"
+        title="Reset Map"
+        @click="ResetMap"
+      >
         <i class="fas fa-home fa-1x"></i>
       </button>
     </div>
     <Capture />
-    <Legend @mapTypeChanged="changeMapType" :selected-map-type="selectedMapType" />
+    <Legend
+      @mapTypeChanged="changeMapType"
+      :selected-map-type="selectedMapType"
+      @togglePolice="flagPolice"
+    />
     <IconInfo />
   </div>
 </template>
@@ -22,6 +30,7 @@ import Legend from "@/components/Legend";
 import Search from "@/components/SearchComponents/Search";
 const uuidv1 = require("uuid/v1");
 const pinUrl = require("@/assets/pins/pin.png");
+const policePoints = require("@/assets/jsonLayers/polPoints.js");
 export default {
   name: "Landing",
   components: {
@@ -37,8 +46,12 @@ export default {
       selectedMapType: this.defaultMapType,
       center: [this.latitude, this.longitude],
       leafletMap: null,
-      latitude: -28,
-      longitude: 25
+      zoom:9,
+      policeIconUrl: require("@/assets/images/police-station.png"),
+      policePointsData: require("@/assets/data/Policestations.json"),
+      policelayer: null,
+      latitude: -34,
+      longitude: 18.5
     };
   },
   props: {
@@ -58,7 +71,7 @@ export default {
         mapType: this.defaultMapType,
         minZoom: 5,
         maxZoom: 18,
-        zoom: 5,
+        zoom: this.zoom,
         zoomControl: false,
         crs: L.CRS.EPSG4326
       });
@@ -102,11 +115,38 @@ export default {
     },
     ResetMap() {
       this.clearMarkers();
-      this.leafletMap.setView(new L.LatLng(this.latitude, this.longitude), 5)
+      this.leafletMap.setView(new L.LatLng(this.latitude, this.longitude),this.zoom);
+    },
+    flagPolice(toggle) {
+      console.log(toggle);
+      if (toggle) {
+        this.policelayer.addTo(this.leafletMap);
+      } else {
+        this.leafletMap.removeLayer(this.policelayer);
+      }
+    },
+    initLayers() {
+      //styling police stations
+      let polIcon = L.icon({
+        iconUrl: this.policeIconUrl,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40]
+      });
+      this.policelayer = L.geoJSON(this.policePointsData, {
+        pointToLayer: function(geoJsonPoint, latlng) {
+          return L.marker(latlng, {
+            icon: polIcon
+          });
+        },
+        onEachFeature: function(feature, layer) {
+          layer.bindPopup("This is a Police Station");
+        }
+      });
     }
   },
   mounted() {
     this.initMap();
+    this.initLayers();
   }
 };
 </script>
