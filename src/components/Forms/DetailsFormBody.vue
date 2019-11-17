@@ -20,7 +20,7 @@
         name="callDescription"
         type="text"
         class="form-control textarea"
-        rows="6"
+        rows="4"
         placeholder="Call Description"
       />
     </div>

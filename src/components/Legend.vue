@@ -3,6 +3,7 @@
     <button
       class="btn button btn-primary float-right mt-3 mr-3"
       @click="displaySelector=!displaySelector"
+      title="Legend"
     >
       <span :class="baseMapToggleClass" />
     </button>

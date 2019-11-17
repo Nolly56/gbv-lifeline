@@ -1,9 +1,14 @@
 <template>
-  <div class="container">
-    <h5>Location Details</h5>
-    <br />
+  <div>
     <div class="form-group address-container">
-      <Address class="address-search" v-on:selectionChanged="searchSelectionChanged" />
+      <Address
+      id="AddressComponet"
+        class="address-search"
+        v-on:locationDetail="locationDetail"
+      />
+    </div>
+    <div>
+      <p>_____________________________________</p>
     </div>
     <div class="form-group latlong-container">
       <MapLocation
@@ -19,7 +24,6 @@
         <label class="col-2 col-form-label">Location:</label>
         <div class="col-10">
           <input
-            v-validate="{ required: true}"
             type="text"
             v-model="locationForm.description"
             readonly
@@ -31,32 +35,14 @@
         </div>
       </div>
     </div>
-    <div class="row forms-button-group">
-      <div class="col-6 text-left">
-        <button
-          class="btn"
-          type="button"
-          id="prevBtn"
-          @click="$emit('navigateForm',{index:-1})"
-        >Previous</button>
-      </div>
-      <div class="col-6 text-right">
-        <button
-          class="btn btn-primary"
-          type="button"
-          id="nextBtn"
-          @click="validateBeforePostBack()"
-        >Submit</button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import Address from "@/components/SearchComponents/Search";
-import MapLocation from "@/components/Maps/MapLocation.vue";
+import Address from "@/components/SearchComponents/Address.vue";
+import MapLocation from "@/components/SearchComponents/MapLocation.vue";
 export default {
-  name: "LocationFormBody",
+  name: "LocationForm",
   components: {
     Address,
     MapLocation
@@ -71,13 +57,36 @@ export default {
     };
   },
   props: {
-
+    reverseGeocodeUrl: "",
+    addressDetailApiUrl: "",
+    searchUrl: "",
+    tokenUrl: "",
+    lbsUrl: "",
+    clientDetails: {},
+    selectedLatLong: {}
   },
   methods: {
+    validateBeforePostBack() {
+      this.$emit("isMapOpen", false);
+      this.$emit("navigateForm", {
+        vaild: true,
+        form: "location",
+        details: this.locationForm,
+        index: 1
+      });
+    },
+    locationDetail(data) {
+      console.log(data)
+    },
+    foundMapLocation(data) {
 
+    },
+    isMapOpen(data) {
+      this.$emit("isMapOpen", data);
+    }
   },
   watch: {
-
+    clientDetails() {}
   }
 };
 </script>
@@ -86,5 +95,13 @@ export default {
 .location-input {
   text-overflow: ellipsis;
   overflow: hidden;
+  z-index: 1100;
+}
+.search-button-group {
+  position: absolute;
+  margin-left: 450px;
+}
+.address-search{
+  z-index:2147483647 !important;
 }
 </style>

@@ -1,10 +1,14 @@
 <template>
   <div class="fullsize">
-    <search class="d-sm-12" @positionLatLong="positionLatLong" />
+    <!-- <search class="d-sm-12" @positionLatLong="positionLatLong" /> -->
     <div :id="mapId" class="fullsize" style="position: absolute">&nbsp;</div>
+    <div class="baseDisplay">
+      <button  class="btn button btn-primary float-right mt-3 mr-3" title="Reset Map" @click="ResetMap">
+        <i class="fas fa-home fa-1x"></i>
+      </button>
+    </div>
     <Capture />
     <Legend @mapTypeChanged="changeMapType" :selected-map-type="selectedMapType" />
-
     <IconInfo />
   </div>
 </template>
@@ -95,6 +99,10 @@ export default {
         ],
         routeWhileDragging: true
       }).addTo(this.leafletMap);
+    },
+    ResetMap() {
+      this.clearMarkers();
+      this.leafletMap.setView(new L.LatLng(this.latitude, this.longitude), 5)
     }
   },
   mounted() {
@@ -107,5 +115,14 @@ export default {
 .fullsize {
   width: 100%;
   height: 86%;
+}
+.baseDisplay {
+  position: relative;
+  z-index: 401;
+}
+
+.button {
+  width: 45px;
+  height: 45px;
 }
 </style>

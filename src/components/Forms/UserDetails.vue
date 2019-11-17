@@ -1,5 +1,5 @@
 <template>
-  <div v-if="resetForm" class="modal fade" id="capture-modal" role="dialog">
+  <div class="modal fade" id="capture-modal" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <button
@@ -13,21 +13,23 @@
         </button>
         <div class="modal-body">
           <form-wizard
-            v-if="resetForm"
             @on-complete="onComplete"
             title="Emergency"
             subtitle="Call Centre"
             shape="circle"
+            :start-index="startId"
             back-button-text="Back"
             next-button-text="Next"
             finish-button-text="Submit"
             color="#3498db"
+            ref="reset"
+            stepSize="sm"
           >
-            <tab-content title="Details" :icon="user">
+            <tab-content title="Details" icon="ti-user">
               <DetailsFormBody />
             </tab-content>
-            <tab-content title="Last step" icon="ti-check">
-              <DetailsFormBody />
+            <tab-content title="Submit" icon="ti-check">
+              <LocationFormBody />
             </tab-content>
           </form-wizard>
         </div>
@@ -38,31 +40,30 @@
 
 <script>
 import DetailsFormBody from "@/components/Forms/DetailsFormBody";
-//import LocationFormBody from "@/components/Forms/LocationFormBody";
+import LocationFormBody from "@/components/Forms/LocationFormBody";
 
 export default {
   name: "UserDetails",
   components: {
-    DetailsFormBody
-    // LocationFormBody
+    DetailsFormBody,
+    LocationFormBody
   },
   data() {
     return {
-      user: '',
-      submitIcon: "",
-      resetForm: true
+      resetForm: true,
+      startId: 0
     };
   },
   methods: {
     onComplete() {
-      this.resetForm = !this.resetForm;
+      this.$refs.reset.reset();
       document.getElementById("close-e-form").click();
-      this.resetForm = !this.resetForm;
     }
   }
-
 };
 </script>
 <style scoped>
-
+.modal{
+  overflow-y: hidden;
+}
 </style>

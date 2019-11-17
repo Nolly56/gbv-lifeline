@@ -1,11 +1,11 @@
 <template>
   <section>
-    <div class="col-5 input-group input-group-lg search">
+    <div class="input-group search">
       <gmap-autocomplete
-        class="form-control"
-        placeholder="Type address..."
+        id="Address"
+        class="form-control search"
+        placeholder="..."
         @place_changed="setPlace"
-        autocomplete="off"
       />
       <button
         style="border-radius: 0;background-color: #005495;border-color: #005495;"
@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: 'Search',
+  name: 'Address',
   props: {},
   components: {},
   data () {
@@ -32,22 +32,15 @@ export default {
   methods: {
     setPlace (place) {
       if (place) {
+        console.log(place);
         this.place = place
-        let latlong = {
-          latitude: this.place.geometry.location.lat(),
-          longitude: this.place.geometry.location.lng()
-        }
-        this.$emit('positionLatLong', latlong)
+
+        this.$emit('locationDetail', latlong)
       }
     },
     usePlace (place) {
       if (place) {
         this.place = place
-        let latlong = {
-          latitude: this.place.geometry.location.lat(),
-          longitude: this.place.geometry.location.lng()
-        }
-        this.$emit('positionLatLong', latlong)
         this.place = null
       }
     }
@@ -59,8 +52,8 @@ export default {
 </script>
 <style scoped>
 .search {
-  z-index: 1001;
-  width: 100%;
+  z-index: 1400;
+
   pointer-events: all;
   padding-top: 15px;
   padding-right: 0px;
@@ -70,5 +63,9 @@ export default {
 .searchBox {
   max-width: 600px;
   max-height: 45px;
+}
+#Address{
+  width: 10%;
+  position: fixed;
 }
 </style>
