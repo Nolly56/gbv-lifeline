@@ -65,7 +65,6 @@ export default {
   max-height: 45px;
 }
 #Address{
-  width: 10%;
-  position: fixed;
+
 }
 </style>

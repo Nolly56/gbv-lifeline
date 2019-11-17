@@ -17,6 +17,8 @@
       :selected-map-type="selectedMapType"
       @togglePolice="flagPolice"
       @toggleSexualCrime="flagSexualCrime"
+      @toggleAbductionsCrime="flagAbductionsCrime"
+      @toggleRapeCrime="flagRapeCrime"
     />
     <IconInfo />
   </div>
@@ -58,6 +60,14 @@ export default {
       sexualCrimeIconUrl: require("@/assets/images/crime-sexual.png"),
       sexualCrimeData: require("@/assets/jsonLayers/sexualcrime.json"),
       sexualCrimelayer: null,
+      abductionsCrimeCluster: null,
+      abductionsCrimeIconUrl: require("@/assets/images/crimeabductions.png"),
+      abductionsCrimeData: require("@/assets/jsonLayers/abductions.json"),
+      abductionsCrimelayer: null,
+      rapeCrimeCluster: null,
+      rapeCrimeCrimeIconUrl: require("@/assets/images/crimerape.png"),
+      rapeCrimeCrimeData: require("@/assets/jsonLayers/Rape.json"),
+      rapeCrimeCrimelayer: null,
       latitude: -34,
       longitude: 18.5
     };
@@ -144,6 +154,24 @@ export default {
         this.sexualCrimeCluster.refreshClusters();
       }
     },
+    flagAbductionsCrime(toggle) {
+      if (toggle) {
+        this.leafletMap.addLayer(this.abductionsCrimeCluster);
+        this.abductionsCrimeCluster.refreshClusters();
+      } else {
+        this.leafletMap.removeLayer(this.abductionsCrimeCluster);
+        this.abductionsCrimeCluster.refreshClusters();
+      }
+    },
+    flagRapeCrime(toggle) {
+      if (toggle) {
+        this.leafletMap.addLayer(this.rapeCrimeCluster);
+        this.rapeCrimeCluster.refreshClusters();
+      } else {
+        this.leafletMap.removeLayer(this.rapeCrimeCluster);
+        this.rapeCrimeCluster.refreshClusters();
+      }
+    },
     initLayers() {
       //POLICE LAYER START
       let polIcon = L.icon({
@@ -179,7 +207,7 @@ export default {
           });
         },
         onEachFeature: function(feature, layer) {
-          let inci = feature.properties
+          let inci = feature.properties;
           layer.bindPopup(`<dl>
                           <dt>Incident : </dt><dd>${inci.Offence}</dd>
                           <dt>Time of Incident : </dt><dd>${inci.Hour} : ${inci.Minute}</dd>
@@ -190,6 +218,60 @@ export default {
       });
       this.sexualCrimeCluster = sCCluster;
       //SEXUAL VIOLENCE LAYER  END
+
+      //Abductions LAYER START
+      let aCCluster = L.markerClusterGroup();
+      let abductionCIcon = L.icon({
+        iconUrl: this.abductionsCrimeIconUrl,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36]
+      });
+
+      this.abductionsCrimelayer = L.geoJSON(this.abductionsCrimeData, {
+        pointToLayer: function(geoJsonPoint, latlng) {
+          return L.marker(latlng, {
+            icon: abductionCIcon
+          });
+        },
+        onEachFeature: function(feature, layer) {
+          let inci = feature.properties;
+          layer.bindPopup(`<dl>
+                          <dt>Incident : </dt><dd>${inci.Offence}</dd>
+                          <dt>Time of Incident : </dt><dd>${inci.Hour} : ${inci.Minute}</dd>
+                          <dt>Date of Incident : </dt><dd>${inci.Day}/${inci.Month}/${inci.Year} </dd>
+                          </dl>`);
+          aCCluster.addLayer(layer);
+        }
+      });
+      this.abductionsCrimeCluster = aCCluster;
+      //ABDuctions LAYER  END
+
+      //Rape LAYER START
+      let rCCluster = L.markerClusterGroup();
+      let rapeCIcon = L.icon({
+        iconUrl: this.rapeCrimeCrimeIconUrl,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36]
+      });
+
+      this.rapeCrimeCrimelayer = L.geoJSON(this.rapeCrimeCrimeData, {
+        pointToLayer: function(geoJsonPoint, latlng) {
+          return L.marker(latlng, {
+            icon: rapeCIcon
+          });
+        },
+        onEachFeature: function(feature, layer) {
+          let inci = feature.properties;
+          layer.bindPopup(`<dl>
+                          <dt>Incident : </dt><dd>${inci.Offence}</dd>
+                          <dt>Time of Incident : </dt><dd>${inci.Hour} : ${inci.Minute}</dd>
+                          <dt>Date of Incident : </dt><dd>${inci.Day}/${inci.Month}/${inci.Year} </dd>
+                          </dl>`);
+          rCCluster.addLayer(layer);
+        }
+      });
+      this.rapeCrimeCluster = rCCluster;
+      //Rape LAYER  END
     }
   },
   mounted() {

@@ -37,6 +37,16 @@
               <span style="display:inline-block; width: 40px;"></span>
               <input type="checkbox" data-toggle="toggle" data-size="sm" />
             </label>
+            <label @click="abductions()" class="w-100">
+              Abductions
+              <span style="display:inline-block; width: 64px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
+            </label>
+            <label @click="rape()" class="w-100">
+              Rape
+              <span style="display:inline-block; width: 105px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
+            </label>
           </div>
         </div>
       </div>
@@ -59,7 +69,9 @@ export default {
     return {
       displaySelector: false,
       police: false,
-      sexualC: false
+      sexualC: false,
+      abductionsC: false,
+      rapeC: false
     };
   },
   methods: {
@@ -81,6 +93,14 @@ export default {
     crimeSexual() {
       this.sexualC = !this.sexualC;
       this.$emit("toggleSexualCrime", this.sexualC);
+    },
+    abductions() {
+      this.abductionsC = !this.abductionsC;
+      this.$emit("toggleAbductionsCrime", this.abductionsC);
+    },
+    rape() {
+      this.rapeC = !this.rapeC;
+      this.$emit("toggleRapeCrime", this.rapeC);
     }
   },
   name: "BaseDisplay",
@@ -111,7 +131,7 @@ export default {
 }
 .dropdown-legend {
   width: 250px;
-  height: 380px;
+  height: auto;
   background-color: #f8f9fa;
 }
 </style>
