@@ -64,7 +64,7 @@
         </button>
       </div>
       <div class="modal-body">
-        Sexual Assault
+        <sexualAssTable/>
       </div>
     </div>
   </div>
@@ -107,10 +107,16 @@
 
 <script>
 import Landing from "@/views/Landing";
+import sexualAssTable from "@/views/sexualAssTable";
+import abductionsTable from "@/views/abductionsTable";
+import rapeTable from "@/views/rapeTable";
 export default {
   name: "App",
   components: {
-    Landing
+    Landing,
+    sexualAssTable,
+    abductionsTable,
+    rapeTable
   },
   data() {
     return {

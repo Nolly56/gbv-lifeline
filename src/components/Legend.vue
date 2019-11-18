@@ -19,12 +19,18 @@
             >Vector</button>
             <button :class="menuOption('hybrid')" @click="select('hybrid')">Hybrid</button>
             <button :class="menuOption('imagery')" @click="select('imagery')">Image</button>
+            <button :class="menuOption('openS')" @click="openStreet('openS')">open Street</button>
           </div>
           <div>
             <hr />
             <p>MAP POI</p>
             <label @click="policePOI()" class="w-100">
               Police Station
+              <span style="display:inline-block; width: 40px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
+            </label>
+            <label @click="communityPOI()" class="w-100">
+              Community Centre
               <span style="display:inline-block; width: 40px;"></span>
               <input type="checkbox" data-toggle="toggle" data-size="sm" />
             </label>
@@ -71,7 +77,8 @@ export default {
       police: false,
       sexualC: false,
       abductionsC: false,
-      rapeC: false
+      rapeC: false,
+      community: false
     };
   },
   methods: {
@@ -86,9 +93,17 @@ export default {
       this.$emit("mapTypeChanged", mapType);
       this.displaySelector = !this.displaySelector;
     },
+    openStreet(mapType){
+       this.$emit("mapTypeChanged", mapType);
+      this.displaySelector = !this.displaySelector;
+    },
     policePOI() {
       this.police = !this.police;
       this.$emit("togglePolice", this.police);
+    },
+    communityPOI() {
+      this.community = !this.community;
+      this.$emit("toggleCommunity", this.community);
     },
     crimeSexual() {
       this.sexualC = !this.sexualC;
