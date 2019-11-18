@@ -11,12 +11,21 @@
         <i class="fas fa-home fa-1x"></i>
       </button>
     </div>
+    <div class="baseDisplay">
+      <button class="btn button btn-primary float-right mt-3 mr-3" @click="flagcrimeRate">
+        <i class="fas fa-user-ninja fa-1x"></i>
+      </button>
+    </div>
+
     <Capture />
     <Legend
       @mapTypeChanged="changeMapType"
       :selected-map-type="selectedMapType"
       @togglePolice="flagPolice"
+      @toggleCommunity="flagCommunity"
       @toggleSexualCrime="flagSexualCrime"
+      @toggleAbductionsCrime="flagAbductionsCrime"
+      @toggleRapeCrime="flagRapeCrime"
     />
     <IconInfo />
   </div>
@@ -34,7 +43,11 @@ import Legend from "@/components/Legend";
 import Search from "@/components/SearchComponents/Search";
 const uuidv1 = require("uuid/v1");
 const pinUrl = require("@/assets/pins/pin.png");
-
+const communityCentre = require("@/assets/images/communityCentre.png");
+const crimerape = require("@/assets/images/crimerape.png");
+const crimeabductions = require("@/assets/images/crimeabductions.png");
+const crimesexual =  require("@/assets/images/crime-sexual.png");
+const policeStation = require("@/assets/images/police-station.png");
 export default {
   name: "Landing",
   components: {
@@ -51,13 +64,29 @@ export default {
       center: [this.latitude, this.longitude],
       leafletMap: null,
       zoom: 9,
-      policeIconUrl: require("@/assets/images/police-station.png"),
+      policeIconUrl:policeStation ,
       policePointsData: require("@/assets/jsonLayers/Policestations.json"),
       policelayer: null,
       sexualCrimeCluster: null,
-      sexualCrimeIconUrl: require("@/assets/images/crime-sexual.png"),
+      sexualCrimeIconUrl:crimesexual,
       sexualCrimeData: require("@/assets/jsonLayers/sexualcrime.json"),
       sexualCrimelayer: null,
+      abductionsCrimeCluster: null,
+      abductionsCrimeIconUrl:crimeabductions ,
+      abductionsCrimeData: require("@/assets/jsonLayers/abductions.json"),
+      abductionsCrimelayer: null,
+      rapeCrimeCluster: null,
+      rapeCrimeCrimeIconUrl: crimerape,
+      rapeCrimeCrimeData: require("@/assets/jsonLayers/Rape.json"),
+      rapeCrimeCrimelayer: null,
+      communityCluster: null,
+      communityIconUrl: communityCentre,
+      communityData: require("@/assets/jsonLayers/RecHubs.json"),
+      communitylayer: null,
+      crimeRate: require("@/assets/jsonLayers/crimerate.json"),
+      crimeRateLayer: null,
+      legendControl: null,
+      crimeEnabled: false,
       latitude: -34,
       longitude: 18.5
     };
@@ -103,7 +132,12 @@ export default {
     },
     changeMapType(mapType) {
       this.selectedMapType = mapType;
-      this.leafletMap.switchTo(mapType);
+      if(mapType ==="openS"){
+         //Add open layer code here
+      }else{
+        this.leafletMap.switchTo(mapType);
+      }
+
     },
     positionLatLong(latlong) {
       this.setMarker(latlong);
@@ -144,7 +178,146 @@ export default {
         this.sexualCrimeCluster.refreshClusters();
       }
     },
+    flagAbductionsCrime(toggle) {
+      if (toggle) {
+        this.leafletMap.addLayer(this.abductionsCrimeCluster);
+        this.abductionsCrimeCluster.refreshClusters();
+      } else {
+        this.leafletMap.removeLayer(this.abductionsCrimeCluster);
+        this.abductionsCrimeCluster.refreshClusters();
+      }
+    },
+    flagRapeCrime(toggle) {
+      if (toggle) {
+        this.leafletMap.addLayer(this.rapeCrimeCluster);
+        this.rapeCrimeCluster.refreshClusters();
+      } else {
+        this.leafletMap.removeLayer(this.rapeCrimeCluster);
+        this.rapeCrimeCluster.refreshClusters();
+      }
+    },
+    flagcrimeRate() {
+      this.crimeEnabled = !this.crimeEnabled;
+      this.initLegend();
+      if (this.crimeEnabled) {
+        this.leafletMap.addLayer(this.crimeRateLayer);
+      } else {
+        this.legendControl.remove();
+        this.leafletMap.removeLayer(this.crimeRateLayer);
+      }
+    },
+    flagCommunity(toggle){
+        if (toggle) {
+        this.leafletMap.addLayer(this.communityCluster);
+        this.communityCluster.refreshClusters();
+      } else {
+        this.leafletMap.removeLayer(this.communityCluster);
+        this.communityCluster.refreshClusters();
+      }
+    },
+    crimeLayer() {
+      let map = this.leafletMap;
+      let getColor = d => {
+        return d > 1000
+          ? "#800026"
+          : d > 500
+          ? "#BD0026"
+          : d > 200
+          ? "#E31A1C"
+          : d > 100
+          ? "#FC4E2A"
+          : d > 50
+          ? "#FD8D3C"
+          : d > 20
+          ? "#FEB24C"
+          : d > 10
+          ? "#FED976"
+          : "#FFEDA0";
+      };
+
+      let style = feature => {
+        return {
+          fillColor: getColor(feature.properties.Ass_Rate),
+          weight: 2,
+          opacity: 1,
+          color: "white",
+          dashArray: "3",
+          fillOpacity: 0.7
+        };
+      };
+      let highlightFeature = e => {
+        let layer = e.target;
+        layer.setStyle({
+          weight: 5,
+          color: "#666",
+          dashArray: "",
+          fillOpacity: 0.7
+        });
+
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+          layer.bringToFront();
+        }
+      };
+      let resetHighlight = e => {
+        this.crimeRateLayer.resetStyle(e.target);
+      };
+      let zoomToFeature = e => {
+        map.fitBounds(e.target.getBounds());
+      };
+      let onEachFeature = (feature, layer) => {
+        layer.on({
+          mouseover: highlightFeature,
+          mouseout: resetHighlight,
+          click: zoomToFeature
+        });
+        layer.bindPopup(
+          "Subplace Name: " +
+            feature.properties.SP_NAME +
+            "<br>" +
+            "Crime rate: " +
+            feature.properties.Ass_Rate +
+            " per 100 population" +
+            "<br>" +
+            "Lat: " +
+            feature.properties.Y_Coord +
+            "<br>" +
+            "Long: " +
+            feature.properties.X_Coord
+        );
+      };
+      let localCrimeRateLayer = L.geoJson(this.crimeRate, {
+        style: style,
+        onEachFeature: onEachFeature
+      });
+
+      this.crimeRateLayer = localCrimeRateLayer;
+    },
     initLayers() {
+            //POLICE LAYER START
+     let comCluster = L.markerClusterGroup();
+      let communityIcon = L.icon({
+        iconUrl: this.communityIconUrl,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36]
+      });
+
+      this.communitylayer = L.geoJSON(this.communityData, {
+        pointToLayer: function(geoJsonPoint, latlng) {
+          return L.marker(latlng, {
+            icon: communityIcon
+          });
+        },
+        onEachFeature: function(feature, layer) {
+          let name = feature.properties.NAME;
+          layer.bindPopup(`<dl>
+                          <dt>Community Centre Name : </dt><dd>${name}</dd></dl>`);
+                          comCluster.addLayer(layer);
+        }
+      });
+      this.communityCluster = comCluster;
+      //POLICE LAYER END
+
+
       //POLICE LAYER START
       let polIcon = L.icon({
         iconUrl: this.policeIconUrl,
@@ -159,7 +332,9 @@ export default {
           });
         },
         onEachFeature: function(feature, layer) {
-          layer.bindPopup("This is a Police Station");
+          let name = feature.properties2.NAME;
+          layer.bindPopup(`<dl>
+                          <dt>Police Station Name : </dt><dd>${name}</dd></dl>`);
         }
       });
       //POLICE LAYER END
@@ -179,7 +354,7 @@ export default {
           });
         },
         onEachFeature: function(feature, layer) {
-          let inci = feature.properties
+          let inci = feature.properties;
           layer.bindPopup(`<dl>
                           <dt>Incident : </dt><dd>${inci.Offence}</dd>
                           <dt>Time of Incident : </dt><dd>${inci.Hour} : ${inci.Minute}</dd>
@@ -190,6 +365,104 @@ export default {
       });
       this.sexualCrimeCluster = sCCluster;
       //SEXUAL VIOLENCE LAYER  END
+
+      //Abductions LAYER START
+      let aCCluster = L.markerClusterGroup();
+      let abductionCIcon = L.icon({
+        iconUrl: this.abductionsCrimeIconUrl,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36]
+      });
+
+      this.abductionsCrimelayer = L.geoJSON(this.abductionsCrimeData, {
+        pointToLayer: function(geoJsonPoint, latlng) {
+          return L.marker(latlng, {
+            icon: abductionCIcon
+          });
+        },
+        onEachFeature: function(feature, layer) {
+          let inci = feature.properties;
+          layer.bindPopup(`<dl>
+                          <dt>Incident : </dt><dd>${inci.Offence}</dd>
+                          <dt>Time of Incident : </dt><dd>${inci.Hour} : ${inci.Minute}</dd>
+                          <dt>Date of Incident : </dt><dd>${inci.Day}/${inci.Month}/${inci.Year} </dd>
+                          </dl>`);
+          aCCluster.addLayer(layer);
+        }
+      });
+      this.abductionsCrimeCluster = aCCluster;
+      //ABDuctions LAYER  END
+
+      //Rape LAYER START
+      let rCCluster = L.markerClusterGroup();
+      let rapeCIcon = L.icon({
+        iconUrl: this.rapeCrimeCrimeIconUrl,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36]
+      });
+
+      this.rapeCrimeCrimelayer = L.geoJSON(this.rapeCrimeCrimeData, {
+        pointToLayer: function(geoJsonPoint, latlng) {
+          return L.marker(latlng, {
+            icon: rapeCIcon
+          });
+        },
+        onEachFeature: function(feature, layer) {
+          let inci = feature.properties;
+          layer.bindPopup(`<dl>
+                          <dt>Incident : </dt><dd>${inci.Offence}</dd>
+                          <dt>Time of Incident : </dt><dd>${inci.Hour} : ${inci.Minute}</dd>
+                          <dt>Date of Incident : </dt><dd>${inci.Day}/${inci.Month}/${inci.Year} </dd>
+                          </dl>`);
+          rCCluster.addLayer(layer);
+        }
+      });
+      this.rapeCrimeCluster = rCCluster;
+
+
+      //Rape LAYER  END
+      this.crimeLayer();
+    },
+    initLegend(enable) {
+      if (this.legendControl) {
+        this.legendControl.remove();
+      }
+      let getColor = d => {
+        return d > 1000
+          ? "#800026"
+          : d > 500
+          ? "#BD0026"
+          : d > 200
+          ? "#E31A1C"
+          : d > 100
+          ? "#FC4E2A"
+          : d > 50
+          ? "#FD8D3C"
+          : d > 20
+          ? "#FEB24C"
+          : d > 10
+          ? "#FED976"
+          : "#FFEDA0";
+      };
+      this.legendControl = L.control({ position: "bottomright" });
+      this.legendControl.onAdd = function(mymap) {
+        let div = L.DomUtil.create("div", "info legend"),
+          grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+          labels = ["<strong>Crime rate</strong>"];
+
+        // loop through our crime rate intervals and generate a label with a colored square for each interval
+        for (let i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+            '<i style="background:' +
+            getColor(grades[i] + 1) +
+            '"></i> ' +
+            grades[i] +
+            (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+        }
+
+        return div;
+      };
+      this.legendControl.addTo(this.leafletMap);
     }
   },
   mounted() {
@@ -199,7 +472,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .fullsize {
   width: 100%;
   height: 86%;
@@ -212,5 +485,20 @@ export default {
 .button {
   width: 45px;
   height: 45px;
+}
+.legend {
+  line-height: 30px;
+  color: #555;
+}
+
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 1;
+}
+.leaflet-control {
+  background-color: white;
 }
 </style>

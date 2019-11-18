@@ -11,8 +11,10 @@
     <div class="form-group">
       <select id="input-emergency" class="form-control">
         <option selected>Select Emergency Type</option>
-        <option>Domestic Violence</option>
-        <option>Other</option>
+        <option id="1">Sexual Assault</option>
+        <option id="2">Abductions</option>
+        <option id="3">Rape</option>
+        <option id="0">Other</option>
       </select>
     </div>
     <div class="form-group">

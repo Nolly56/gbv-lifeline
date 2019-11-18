@@ -19,12 +19,18 @@
             >Vector</button>
             <button :class="menuOption('hybrid')" @click="select('hybrid')">Hybrid</button>
             <button :class="menuOption('imagery')" @click="select('imagery')">Image</button>
+            <button :class="menuOption('openS')" @click="openStreet('openS')">open Street</button>
           </div>
           <div>
             <hr />
             <p>MAP POI</p>
             <label @click="policePOI()" class="w-100">
               Police Station
+              <span style="display:inline-block; width: 40px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
+            </label>
+            <label @click="communityPOI()" class="w-100">
+              Community Centre
               <span style="display:inline-block; width: 40px;"></span>
               <input type="checkbox" data-toggle="toggle" data-size="sm" />
             </label>
@@ -35,6 +41,16 @@
             <label @click="crimeSexual()" class="w-100">
               Sexual Assault
               <span style="display:inline-block; width: 40px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
+            </label>
+            <label @click="abductions()" class="w-100">
+              Abductions
+              <span style="display:inline-block; width: 64px;"></span>
+              <input type="checkbox" data-toggle="toggle" data-size="sm" />
+            </label>
+            <label @click="rape()" class="w-100">
+              Rape
+              <span style="display:inline-block; width: 105px;"></span>
               <input type="checkbox" data-toggle="toggle" data-size="sm" />
             </label>
           </div>
@@ -59,7 +75,10 @@ export default {
     return {
       displaySelector: false,
       police: false,
-      sexualC: false
+      sexualC: false,
+      abductionsC: false,
+      rapeC: false,
+      community: false
     };
   },
   methods: {
@@ -74,13 +93,29 @@ export default {
       this.$emit("mapTypeChanged", mapType);
       this.displaySelector = !this.displaySelector;
     },
+    openStreet(mapType){
+       this.$emit("mapTypeChanged", mapType);
+      this.displaySelector = !this.displaySelector;
+    },
     policePOI() {
       this.police = !this.police;
       this.$emit("togglePolice", this.police);
     },
+    communityPOI() {
+      this.community = !this.community;
+      this.$emit("toggleCommunity", this.community);
+    },
     crimeSexual() {
       this.sexualC = !this.sexualC;
       this.$emit("toggleSexualCrime", this.sexualC);
+    },
+    abductions() {
+      this.abductionsC = !this.abductionsC;
+      this.$emit("toggleAbductionsCrime", this.abductionsC);
+    },
+    rape() {
+      this.rapeC = !this.rapeC;
+      this.$emit("toggleRapeCrime", this.rapeC);
     }
   },
   name: "BaseDisplay",
@@ -111,7 +146,7 @@ export default {
 }
 .dropdown-legend {
   width: 250px;
-  height: 380px;
+  height: auto;
   background-color: #f8f9fa;
 }
 </style>

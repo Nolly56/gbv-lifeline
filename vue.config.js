@@ -4,21 +4,21 @@ module.exports = {
       .rule('images')
       .use('url-loader')
       .tap(options => Object.assign({}, options, {
-        name: '.[name].[ext]'
+        name: '[name].[ext]'
       }))
   },
 
   css: {
     extract: {
-      filename: '.[name].css',
-      chunkFilename: '.[name].css'
+      filename: '[name].css',
+      chunkFilename: '[name].css'
     }
   },
 
   configureWebpack: {
     output: {
-      filename: '.[name].js',
-      chunkFilename: '.[name].js'
+      filename: '[name].js',
+      chunkFilename: '[name].js'
     }
   },
 
