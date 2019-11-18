@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="navbar fixed-top" style="background-color: #005495;">
       <img
-        src="@/assets/images/LifeLine.png"
+        :src="rolo"
         alt="Life Line Logo"
         style="width:45px;margin-left:30px;"
       />
@@ -110,6 +110,7 @@ import Landing from "@/views/Landing";
 import sexualAssTable from "@/views/sexualAssTable";
 import abductionsTable from "@/views/abductionsTable";
 import rapeTable from "@/views/rapeTable";
+const rolo = require("@/../assets/images/LifeLine.png");
 export default {
   name: "App",
   components: {

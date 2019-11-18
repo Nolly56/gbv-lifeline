@@ -43,7 +43,11 @@ import Legend from "@/components/Legend";
 import Search from "@/components/SearchComponents/Search";
 const uuidv1 = require("uuid/v1");
 const pinUrl = require("@/assets/pins/pin.png");
-
+const communityCentre = require("@/assets/images/communityCentre.png");
+const crimerape = require("@/assets/images/crimerape.png");
+const crimeabductions = require("@/assets/images/crimeabductions.png");
+const crimesexual =  require("@/assets/images/crime-sexual.png");
+const policeStation = require("@/assets/images/police-station.png");
 export default {
   name: "Landing",
   components: {
@@ -60,23 +64,23 @@ export default {
       center: [this.latitude, this.longitude],
       leafletMap: null,
       zoom: 9,
-      policeIconUrl: require("@/assets/images/police-station.png"),
+      policeIconUrl:policeStation ,
       policePointsData: require("@/assets/jsonLayers/Policestations.json"),
       policelayer: null,
       sexualCrimeCluster: null,
-      sexualCrimeIconUrl: require("@/assets/images/crime-sexual.png"),
+      sexualCrimeIconUrl:crimesexual,
       sexualCrimeData: require("@/assets/jsonLayers/sexualcrime.json"),
       sexualCrimelayer: null,
       abductionsCrimeCluster: null,
-      abductionsCrimeIconUrl: require("@/assets/images/crimeabductions.png"),
+      abductionsCrimeIconUrl:crimeabductions ,
       abductionsCrimeData: require("@/assets/jsonLayers/abductions.json"),
       abductionsCrimelayer: null,
       rapeCrimeCluster: null,
-      rapeCrimeCrimeIconUrl: require("@/assets/images/crimerape.png"),
+      rapeCrimeCrimeIconUrl: crimerape,
       rapeCrimeCrimeData: require("@/assets/jsonLayers/Rape.json"),
       rapeCrimeCrimelayer: null,
       communityCluster: null,
-      communityIconUrl: require("@/assets/images/communityCentre.png"),
+      communityIconUrl: communityCentre,
       communityData: require("@/assets/jsonLayers/RecHubs.json"),
       communitylayer: null,
       crimeRate: require("@/assets/jsonLayers/crimerate.json"),
